@@ -15,7 +15,7 @@ Login : Identic cu Register pana la crearea mesajului, unde difera url-ul. Pe la
 
 enter_library : daca cookie-ul este nul, se va da o eroare si se va trece la urmatoarea comanda, altfel se creeaza si trimite un mesaj de tip GET cu cookie-ul extras anterior, se afiseaza raspunsul si se extrage token-ul JWT(asemanator cu extragerea cookie-ului).
 
-get_books : asemanator cu enter_library, dar alt url iar header-ul va avea si token-ul in el, daca nu avem un token se va trimite un token "Dummy" gol. Se afiseaqza raspunsul.
+get_books : asemanator cu enter_library, dar alt url iar header-ul va avea si token-ul in el, daca nu avem un token se va trimite un token "Dummy" gol. Se afiseaza raspunsul.
 
 get_book : idem get_books, dar la url vom concatena un id care se va citi de la tastatura.
 
