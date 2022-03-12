@@ -1,0 +1,31 @@
+Pentru implementarea cerintei, am folosit headerele helpers, requests si buffer primite la laboratorul 10 modificate pentru implementarea cerintei(functiile compute_post_request si compute_get_request primesc acum si un token pe care il adauga in header cand este cazul. deasemenea am adaugat functia compute_delete_request identica cu compute_get in afara de comanda trimisa).
+Pentru parsarea JSON-urilor create in payload am folosit libraria functiile din libraria Parson. Am ales sa implementez tema in C folosiind Parson si nu in C++ cu nlohmann din 2 motive:  1- Functiile din Parson erau mai bine ilustrate in documentatie.
+         2- Singurul avantaj al folosirii c++ ar fi fost accesul la structuri precum    queue ,map, vector, etc... , structuri de care aceasta tema nu avea nevoie. 
+
+
+Comenzile efectuate de client au loc intr-o bucla while infinita ce citeste comenzi de la tastatura. Bucla  este intrerupta doar in cazul primirii comenzii de exit.
+
+gestionarea comenzii date se face printr-o succesiune de blocuri if/else. Deschiderea si Inchiderea conexiunii se fac la fiecare comanda, altfel daca am fi deschis conexiunea inaintea buclei si inchis-o dupa aceasta conexiunea s-ar fi blocat dupa prima comanda data, iar la urmatoarea comanda clientul n-ar fi primit nimic.
+
+cele 9 comenzi sunt implementate astfel:
+ 
+Register : se citesc de la tastatura username-ul si parola, apoi se creeaza un obiect json in care se pun cele 2, urmand ca acest obiect sa fie parsat intr-un payload de tip string, reprezentand corpul mesajului HTTP. Dupa crearea payloadului se creeaza si trimite mesajul, apoi se primeste si afiseaza raspunsul.
+
+Login : Identic cu Register pana la crearea mesajului, unde difera url-ul. Pe langa asta, se extrage cookie-ul (am folosit strstr si strtok), iar daca acesta nu a fost returnat din cauza unei erori cookie-ul va ramane nul.
+
+enter_library : daca cookie-ul este nul, se va da o eroare si se va trece la urmatoarea comanda, altfel se creeaza si trimite un mesaj de tip GET cu cookie-ul extras anterior, se afiseaza raspunsul si se extrage token-ul JWT(asemanator cu extragerea cookie-ului).
+
+get_books : asemanator cu enter_library, dar alt url iar header-ul va avea si token-ul in el, daca nu avem un token se va trimite un token "Dummy" gol. Se afiseaqza raspunsul.
+
+get_book : idem get_books, dar la url vom concatena un id care se va citi de la tastatura.
+
+add_book : se citesc datele despre carte si se creeaza un mesaj de tip post avand cookie-ul si token-ul (la fel ca la get_books si get_book, se vor da niste date goale daca nu avem cookie si token). Se trimite mesajul si se afiseaza raspunsul, care va fi fie gol daca a reusit adaugarea fie un mesaj de eroare.
+
+delete_book : asemanator cu get_book, difera doar comanda din header (vom avea DELETE in loc de GET). Va returna eroare sau nimic asemanator cu add_book.
+
+logout : se trimite o comanda de tip get la url-ul de logout si se sterge cookie-ul si token-ul.
+
+exit : face break.
+
+
+
